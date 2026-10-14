@@ -1,0 +1,73 @@
+const P=require('pptxgenjs');const p=new P();p.layout='LAYOUT_16x9';
+const BG='0B1220',CARD='152036',AC='22D3EE',AM='F59E0B',TX='F1F5F9',MU='94A3B8',RD='DC2626',BL='2563EB',F='Calibri';
+const T=(s,t,o)=>s.addText(t,Object.assign({fontFace:F,color:TX,isTextBox:true,margin:0},o));
+function base(t,sub){const s=p.addSlide();s.background={color:BG};
+s.addShape(p.ShapeType.rect,{x:0,y:0,w:0.12,h:5.625,fill:{color:AC}});
+T(s,t,{x:0.5,y:0.25,w:9,h:0.6,fontSize:26,bold:true});if(sub)T(s,sub,{x:0.5,y:0.82,w:9,h:0.3,fontSize:13,color:MU});return s;}
+function frame(s,active,url){const x=0.5,y=1.3,w=5.9,h=3.9;
+s.addShape(p.ShapeType.roundRect,{x,y,w,h,fill:{color:'0F1A2E'},line:{color:'334155',width:1},rectRadius:0.08});
+[RD,AM,'10B981'].forEach((c,i)=>s.addShape(p.ShapeType.ellipse,{x:x+0.15+i*0.2,y:y+0.13,w:0.12,h:0.12,fill:{color:c}}));
+s.addShape(p.ShapeType.roundRect,{x:x+0.9,y:y+0.08,w:4.5,h:0.22,fill:{color:CARD},rectRadius:0.05});
+T(s,url,{x:x+1.0,y:y+0.08,w:4.3,h:0.22,fontSize:9,color:MU,valign:'middle'});
+T(s,'🛡 BrandGuard DRP',{x:x+0.2,y:y+0.42,w:3,h:0.3,fontSize:13,bold:true,color:AC});
+['Brand Profile','Social','App Store','Look-alike'].forEach((t,i)=>{const on=i==active;
+s.addShape(p.ShapeType.roundRect,{x:x+0.2+i*1.35,y:y+0.8,w:1.27,h:0.28,fill:{color:on?AC:CARD},rectRadius:0.05});
+T(s,t,{x:x+0.2+i*1.35,y:y+0.8,w:1.27,h:0.28,fontSize:10,bold:on,color:on?'04212A':TX,align:'center',valign:'middle'});});
+return{x:x+0.2,y:y+1.25,w:w-0.4};}
+function alert(s,m,i,name,meta,tier,score,chips,col){const y=m.y+i*0.82;
+s.addShape(p.ShapeType.roundRect,{x:m.x,y,w:m.w,h:0.74,fill:{color:CARD},line:{color:'26344F',width:0.75},rectRadius:0.06});
+T(s,name,{x:m.x+0.12,y:y+0.06,w:3.2,h:0.22,fontSize:11,bold:true});
+T(s,meta,{x:m.x+0.12,y:y+0.27,w:3.6,h:0.18,fontSize:8,color:MU});
+s.addShape(p.ShapeType.roundRect,{x:m.x+m.w-1.15,y:y+0.07,w:1.05,h:0.22,fill:{color:col},rectRadius:0.1});
+T(s,tier+' · '+score,{x:m.x+m.w-1.15,y:y+0.07,w:1.05,h:0.22,fontSize:9,bold:true,align:'center',valign:'middle'});
+T(s,chips,{x:m.x+0.12,y:y+0.5,w:m.w-0.3,h:0.2,fontSize:8,color:AC});}
+function notes(s,title,items){s.addShape(p.ShapeType.roundRect,{x:6.6,y:1.3,w:2.95,h:3.9,fill:{color:CARD},line:{color:AC,width:1},rectRadius:0.08});
+T(s,title,{x:6.75,y:1.4,w:2.65,h:0.35,fontSize:14,bold:true,color:AC});
+T(s,items.map((t,i)=>({text:t,options:{bullet:true,breakLine:i<items.length-1,paraSpaceAfter:6}})),{x:6.75,y:1.8,w:2.65,h:3.3,fontSize:11,valign:'top'});}
+// 1
+let s=p.addSlide();s.background={color:BG};s.addShape(p.ShapeType.rect,{x:0,y:0,w:0.12,h:5.625,fill:{color:AC}});
+T(s,'BrandGuard DRP',{x:0.7,y:1.5,w:8.6,h:0.9,fontSize:44,bold:true});
+T(s,'App Prototype Walkthrough',{x:0.7,y:2.4,w:8.6,h:0.5,fontSize:22,color:AC});
+T(s,'Brand Profile · Social Monitoring · App Store Monitoring · Look-alike Detection',{x:0.7,y:3.1,w:8.6,h:0.4,fontSize:14,color:MU});
+T(s,'Live prototype: https://claude.ai/artifact/BR7KedYoeRMs8HpLT5xgnV',{x:0.7,y:4.8,w:8.6,h:0.3,fontSize:12,color:MU});
+// 2
+s=base('Screen 1 · Brand Profile','Define what is legitimate so it is never flagged');
+let m=frame(s,0,'brandguard.app/brand-profile');
+[['Company / brand name','PayNova'],['Official domain','paynova.com'],['Official social handles','@paynova'],['Official app IDs','com.paynova.app']].forEach((r,i)=>{
+T(s,r[0],{x:m.x,y:m.y+i*0.6,w:3,h:0.18,fontSize:8,color:MU});
+s.addShape(p.ShapeType.roundRect,{x:m.x,y:m.y+0.18+i*0.6,w:m.w,h:0.3,fill:{color:BG},line:{color:'26344F',width:0.75},rectRadius:0.04});
+T(s,r[1],{x:m.x+0.1,y:m.y+0.18+i*0.6,w:3,h:0.3,fontSize:10,valign:'middle'});});
+s.addShape(p.ShapeType.roundRect,{x:m.x,y:m.y+2.45,w:1.8,h:0.3,fill:{color:AC},rectRadius:0.05});
+T(s,'Save brand profile',{x:m.x,y:m.y+2.45,w:1.8,h:0.3,fontSize:10,bold:true,color:'04212A',align:'center',valign:'middle'});
+notes(s,'What it does',['Stores name, logo, domain, handles and app IDs','Acts as the trusted allow-list','Official assets are skipped in every scan','Saved in the browser']);
+// 3
+s=base('Screen 2 · Social Media Monitoring','Impersonation accounts ranked by risk');
+m=frame(s,1,'brandguard.app/social');
+alert(s,m,0,'PayNova Support','@paynova_support · X · 312 followers','High','88','Character swap · Logo 90% · New account (12 days) · Scam language',RD);
+alert(s,m,1,'PayN0va Official','@payn0va.official · Instagram','High','81','Character swap · Logo 95% · Scam language: giveaway',RD);
+alert(s,m,2,'Pay Nova Care','@pay_nova_care · Facebook','Medium','52','Spacing change · Logo 80% · New account',AM);
+notes(s,'Why it flagged',['Name similarity, logo match, account age, followers, bio wording','Every alert shows evidence chips','Official @paynova is skipped','Unrelated "Nova Pets" is not flagged']);
+// 4
+s=base('Screen 3 · App Store Monitoring','Look-alike apps by name, icon and publisher');
+m=frame(s,2,'brandguard.app/apps');
+alert(s,m,0,'PayN0va Wallet','com.payn0va.wallet · Third-party store · 500+','High','92','Character swap · Icon 97% · Different publisher · Copied description',RD);
+alert(s,m,1,'PayNova Rewards','com.fastpay.nova · Google Play · 10K+','High','74','Added words: rewards · Icon 88% · Different publisher',RD);
+alert(s,m,2,'Pay Nova','com.pay.nov · App Store · 1K+','Low','31','Near match · Different publisher',BL);
+notes(s,'Why it flagged',['Similar app name or branding','Icon similarity and copied description','Publisher differs from the brand','Official PayNova app is never flagged']);
+// 5
+s=base('Screen 4 · Look-alike Name Detection','Bonus: character swaps, added words, spacing changes');
+m=frame(s,3,'brandguard.app/look-alike');
+T(s,'Candidate name',{x:m.x,y:m.y,w:3,h:0.18,fontSize:8,color:MU});
+s.addShape(p.ShapeType.roundRect,{x:m.x,y:m.y+0.18,w:m.w,h:0.3,fill:{color:BG},line:{color:'26344F',width:0.75},rectRadius:0.04});
+T(s,'Pay N0va Support',{x:m.x+0.1,y:m.y+0.18,w:3,h:0.3,fontSize:10,valign:'middle'});
+s.addShape(p.ShapeType.roundRect,{x:m.x,y:m.y+0.62,w:m.w,h:0.45,fill:{color:CARD},rectRadius:0.06});
+T(s,'Flagged · 88   Character swap · Spacing change · Added words',{x:m.x+0.12,y:m.y+0.62,w:m.w-0.2,h:0.45,fontSize:10,color:AM,valign:'middle'});
+T(s,'Likely variants attackers register',{x:m.x,y:m.y+1.2,w:4,h:0.2,fontSize:9,color:MU});
+T(s,'paynova-support   paynova_login   payn0va   pay nova   paynovva   p4ynova',{x:m.x,y:m.y+1.45,w:m.w,h:0.5,fontSize:10,color:AC});
+notes(s,'How it works',['Normalizes homoglyphs (0→o, 1→l, rn→m)','Edit-distance for near matches','Detects added keywords','Avoids flagging normal names']);
+// 6
+s=base('Demo Flow','Under two minutes');
+['1  Save the brand profile','2  Run the social scan: fake pages and scam profiles flagged','3  Run the app store scan: look-alikes flagged, official app clean','4  Open an alert: evidence and risk score','5  Test any name in the Look-alike tab'].forEach((t,i)=>{
+s.addShape(p.ShapeType.roundRect,{x:0.5,y:1.4+i*0.7,w:9,h:0.58,fill:{color:CARD},line:{color:AC,width:0.75},rectRadius:0.06});
+T(s,t,{x:0.7,y:1.4+i*0.7,w:8.6,h:0.58,fontSize:14,valign:'middle'});});
+p.writeFile({fileName:'/mnt/user-data/outputs/BrandGuard_Prototype_Slides.pptx'}).then(()=>console.log('ok'));
